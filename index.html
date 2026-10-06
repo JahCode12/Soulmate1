@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Soulmate | Todo para tu mejor amigo</title>
+  <meta name="description" content="Soulmate: camas, collares y juguetes para perros y gatos. Recibe nuestra promo por correo y cierra tu compra por WhatsApp.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet">
+  <style>
+    :root {
+      --brand: #e64a19;
+      --brand-dark: #bf360c;
+      --cream: #fff8f1;
+      --sand: #ffe0b2;
+      --ink: #4e342e;
+      --muted: #6d5a53;
+      --wa: #25d366;
+      --radius: 18px;
+
+      /* Tema del widget de chat */
+      --chat--color-primary: #e64a19;
+      --chat--color-primary-shade-50: #d84315;
+      --chat--color-primary-shade-100: #bf360c;
+      --chat--color-secondary: #25d366;
+      --chat--color-secondary-shade-50: #1ebe5b;
+      --chat--header--background: #4e342e;
+      --chat--header--color: #fff;
+      --chat--toggle--background: #e64a19;
+      --chat--toggle--hover--background: #bf360c;
+      --chat--toggle--active--background: #bf360c;
+      --chat--window--width: 380px;
+      --chat--window--height: 560px;
+      --chat--message--bot--background: #fff3e6;
+      --chat--message--bot--color: #4e342e;
+      --chat--font-family: 'Nunito', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: 'Nunito', system-ui, sans-serif; color: var(--ink); background: var(--cream); line-height: 1.6; }
+    h1, h2, h3 { font-family: 'Fredoka', 'Nunito', sans-serif; line-height: 1.15; margin: 0; }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; }
+    .wrap { width: min(1100px, 100% - 32px); margin-inline: auto; }
+
+    /* Header */
+    header { position: sticky; top: 0; z-index: 20; background: rgba(255, 248, 241, .92); backdrop-filter: blur(8px); border-bottom: 1px solid #f0e0cf; }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { font-family: 'Fredoka', sans-serif; font-size: 1.6rem; font-weight: 600; color: var(--brand); text-decoration: none; }
+    .logo span { color: var(--ink); }
+    nav a { text-decoration: none; font-weight: 700; margin-left: 22px; color: var(--muted); }
+    nav a:hover { color: var(--brand); }
+
+    /* Botones */
+    .btn { display: inline-flex; align-items: center; gap: 8px; border: 0; cursor: pointer; font: 700 1rem 'Nunito', sans-serif; padding: 14px 28px; border-radius: 999px; text-decoration: none; transition: transform .15s, box-shadow .15s; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.14); }
+    .btn-primary { background: var(--brand); color: #fff; }
+    .btn-primary:hover { background: var(--brand-dark); }
+    .btn-wa { background: var(--wa); color: #fff; }
+    .btn-ghost { background: #fff; color: var(--ink); border: 2px solid var(--sand); }
+
+    /* Hero */
+    .hero { padding: 56px 0 48px; }
+    .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 40px; align-items: center; }
+    .badge { display: inline-block; background: var(--sand); color: var(--brand-dark); font-weight: 700; padding: 6px 14px; border-radius: 999px; font-size: .9rem; margin-bottom: 16px; }
+    .hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); }
+    .hero h1 em { font-style: normal; color: var(--brand); }
+    .hero p { font-size: 1.15rem; color: var(--muted); margin: 18px 0 28px; max-width: 520px; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero-img { border-radius: 28px; overflow: hidden; box-shadow: 0 24px 48px rgba(230, 74, 25, .18); transform: rotate(1.5deg); }
+
+    /* Secciones */
+    section { padding: 56px 0; }
+    .title { text-align: center; margin-bottom: 36px; }
+    .title h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); }
+    .title p { color: var(--muted); margin: 8px 0 0; }
+
+    /* Productos */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .card { background: #fff; border-radius: var(--radius); overflow: hidden; box-shadow: 0 6px 20px rgba(78, 52, 46, .08); display: flex; flex-direction: column; transition: transform .2s; }
+    .card:hover { transform: translateY(-6px); }
+    .card-body { padding: 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .card h3 { font-size: 1.3rem; }
+    .card p { margin: 0; color: var(--muted); font-size: .95rem; flex: 1; }
+    .price { display: flex; align-items: baseline; gap: 10px; margin-top: 6px; }
+    .price strong { font-size: 1.7rem; color: var(--brand); font-family: 'Fredoka', sans-serif; }
+    .price s { color: #9e9e9e; }
+    .tag { position: absolute; top: 12px; left: 12px; background: var(--brand); color: #fff; font-weight: 700; font-size: .8rem; padding: 4px 12px; border-radius: 999px; }
+    .card .pic { position: relative; }
+
+    /* Pasos */
+    .steps { background: #fff; }
+    .step { text-align: center; padding: 8px 12px; }
+    .step .n { width: 56px; height: 56px; border-radius: 50%; background: var(--sand); color: var(--brand-dark); font: 600 1.6rem 'Fredoka', sans-serif; display: grid; place-items: center; margin: 0 auto 14px; }
+    .step h3 { font-size: 1.2rem; margin-bottom: 6px; }
+    .step p { margin: 0; color: var(--muted); }
+
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--brand), #ff8a65); color: #fff; border-radius: 28px; padding: 48px 28px; text-align: center; }
+    .cta-box h2 { font-size: clamp(1.7rem, 4vw, 2.4rem); }
+    .cta-box p { margin: 12px auto 26px; max-width: 560px; opacity: .95; }
+    .cta-box .cta-row { justify-content: center; }
+    .cta-box .btn-ghost { border-color: transparent; }
+
+    footer { padding: 32px 0 96px; text-align: center; color: var(--muted); font-size: .9rem; }
+
+    @media (max-width: 800px) {
+      .hero-grid, .grid-3 { grid-template-columns: 1fr; }
+      .hero { padding-top: 32px; }
+      .hero-img { transform: none; order: -1; }
+      nav a:not(.btn) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#inicio">Soul<span>mate</span> 🐾</a>
+    <nav>
+      <a href="#productos">Productos</a>
+      <a href="#como-comprar">Cómo comprar</a>
+      <a class="btn btn-primary" href="#" data-open-chat style="padding:10px 20px;margin-left:22px;color:#fff">Quiero mi promo</a>
+    </nav>
+  </div>
+</header>
+
+<main id="inicio">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="badge">🐶 Para perros y gatos felices 🐱</span>
+        <h1>Todo para tu <em>mejor amigo</em>, con diseño y cariño</h1>
+        <p>Camas, collares y juguetes pensados para su comodidad y seguridad. Cuéntale a nuestro asistente y recibe una promo exclusiva en tu correo.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#" data-open-chat>💬 Recibir mi promo por correo</a>
+          <a class="btn btn-ghost" href="#productos">Ver productos</a>
+        </div>
+      </div>
+      <div class="hero-img">
+        <img src="https://placehold.co/640x520/FFE0B2/5D4037/png?text=Soulmate+%F0%9F%90%BE" alt="Perro y gato con productos Soulmate" width="640" height="520">
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTOS -->
+  <section id="productos">
+    <div class="wrap">
+      <div class="title">
+        <h2>Nuestros favoritos</h2>
+        <p>Precios en soles, IGV incluido.</p>
+      </div>
+      <div class="grid-3">
+        <article class="card">
+          <div class="pic"><span class="tag">-19%</span>
+            <img src="https://placehold.co/520x400/FFE0B2/5D4037/png?text=Cama+Cloud" alt="Cama Ortopédica Cloud" width="520" height="400" loading="lazy"></div>
+          <div class="card-body">
+            <h3>Cama Ortopédica Cloud</h3>
+            <p>Espuma viscoelástica y funda lavable. Tallas S, M y L. Descanso total para tu peludito.</p>
+            <div class="price"><strong>S/ 129.90</strong><s>S/ 159.90</s></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="pic"><span class="tag">-20%</span>
+            <img src="https://placehold.co/520x400/C8E6C9/2E7D32/png?text=Collar+Smart" alt="Collar Smart con placa" width="520" height="400" loading="lazy"></div>
+          <div class="card-body">
+            <h3>Collar Smart con placa</h3>
+            <p>Nylon resistente, ajustable y con placa personalizable para que siempre vuelva a casa.</p>
+            <div class="price"><strong>S/ 39.90</strong><s>S/ 49.90</s></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="pic"><span class="tag">-25%</span>
+            <img src="https://placehold.co/520x400/BBDEFB/1565C0/png?text=Kit+Juguetes" alt="Kit de juguetes interactivos" width="520" height="400" loading="lazy"></div>
+          <div class="card-body">
+            <h3>Kit Juguetes Interactivos</h3>
+            <p>5 piezas de materiales no tóxicos y resistentes a mordidas. Diversión garantizada.</p>
+            <div class="price"><strong>S/ 59.90</strong><s>S/ 79.90</s></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO COMPRAR -->
+  <section id="como-comprar" class="steps">
+    <div class="wrap">
+      <div class="title">
+        <h2>Comprar es muy fácil</h2>
+        <p>Tres pasos y listo.</p>
+      </div>
+      <div class="grid-3">
+        <div class="step"><div class="n">1</div><h3>Chatea con nosotros</h3><p>Abre el chat y deja tu nombre, DNI y correo electrónico.</p></div>
+        <div class="step"><div class="n">2</div><h3>Recibe tu promo</h3><p>Te enviamos un correo con precios e imágenes de nuestros productos.</p></div>
+        <div class="step"><div class="n">3</div><h3>Cierra por WhatsApp</h3><p>Escríbenos al 982 770 361 y coordinamos tu pedido.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section>
+    <div class="wrap">
+      <div class="cta-box">
+        <h2>¿Listo para consentir a tu peludito?</h2>
+        <p>Pide tu promo por el chat o escríbenos directo por WhatsApp. Te respondemos con gusto.</p>
+        <div class="cta-row">
+          <a class="btn btn-ghost" href="#" data-open-chat>💬 Abrir el chat</a>
+          <a class="btn btn-wa" href="https://wa.me/51982770361?text=Hola%20Soulmate%2C%20quiero%20informaci%C3%B3n%20de%20sus%20productos" target="_blank" rel="noopener">📱 WhatsApp 982 770 361</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    © <span id="year"></span> Soulmate · Artículos para mascotas · WhatsApp 982 770 361<br>
+    Tus datos se usan solo para enviarte la promoción y contactarte por tu compra.
+  </div>
+</footer>
+
+<script type="module">
+  import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+  createChat({
+    webhookUrl: 'https://jah177.app.n8n.cloud/webhook/c2000000-0000-4000-8000-000000000001/chat',
+    mode: 'window',
+    chatInputKey: 'chatInput',
+    chatSessionKey: 'sessionId',
+    loadPreviousSession: false,
+    showWelcomeScreen: false,
+    defaultLanguage: 'es',
+    initialMessages: [
+      '¡Hola! 🐾 Soy el asistente de Soulmate.',
+      'Te cuento de nuestros productos y, si quieres, te envío una promo por correo. ¿En qué te ayudo?'
+    ],
+    i18n: {
+      es: {
+        title: 'Soulmate 🐾',
+        subtitle: 'Asistente virtual de la tienda',
+        footer: '',
+        getStarted: 'Nueva conversación',
+        inputPlaceholder: 'Escribe tu mensaje...',
+        closeButtonTooltip: 'Cerrar'
+      }
+    }
+  });
+
+  // Los botones "Quiero mi promo" abren el chat
+  document.querySelectorAll('[data-open-chat]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      if (!document.querySelector('.chat-window')) {
+        document.querySelector('.chat-window-toggle')?.click();
+      }
+    });
+  });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
